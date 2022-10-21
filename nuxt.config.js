@@ -23,6 +23,10 @@ export default {
     {
       src: '~/plugins/toast.js',
       mode: 'client'
+    },
+    {
+      src: '~/plugins/v-tooltip.js',
+      mode: 'client'
     }
   ],
 
