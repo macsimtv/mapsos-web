@@ -46,6 +46,9 @@ export default {
             disabled: false
         }
     },
+    async mounted() {
+        await this.isAuth();
+    },
     methods: {
         async login() {
             this.disabled = true;
@@ -71,6 +74,24 @@ export default {
                 console.log(err);
                 return this.$toast.error(err);
             }            
+        },
+        async isAuth() {
+            const token = localStorage.getItem('token');
+            if(token) {
+                try {
+                    this.$axios.setHeader("Authorization", "Bearer " + token);
+                    var res = await this.$axios.post('/auth/me');
+
+                    if (res.status !== 200) {
+                        localStorage.removeItem('token');
+                    }
+
+                    return this.$router.push('/');
+                } catch (err) {
+                    localStorage.removeItem('token');
+                    return this.$router.push('/login');
+                }
+            }
         }
     }
 }

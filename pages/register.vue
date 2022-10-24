@@ -58,6 +58,9 @@ export default {
             disabled: false
         }
     },
+    async mounted() {
+        await this.isAuth();
+    },
     methods: {
         async register() {
             this.disabled = true;
@@ -70,27 +73,44 @@ export default {
                     return this.$toast.error("Password do not match");
                 }
 
-                const res = await this.$axios.post('/register', {
+                const res = await this.$axios.post('/auth/register', {
                     email: this.email,
-                    password: this.password,
                     username: this.username,
+                    password: this.password,
                 });
 
                 if(res.status !== 201) {
                     this.password = '';
                     this.confirmPassword = '';
                     this.disabled = false;
-                    return this.$toast.error(res.data.message);
+                    return this.$toast.error("Registration failed");
                 }
 
                 this.$toast.success('Registered successfully! Redirecting to login page...');
-                return this.$router.push('/auth/login');
+                return this.$router.push('/login');
             } catch (err) {
                 this.password = '';
                 this.confirmPassword = '';
                 this.disabled = false;
-                console.log(err);
-                return this.$toast.error(err);
+                return this.$toast.error("Registration failed");
+            }
+        },
+        async isAuth() {
+            const token = localStorage.getItem('token');
+            if(token) {
+                try {
+                    this.$axios.setHeader("Authorization", "Bearer " + token);
+                    var res = await this.$axios.post('/auth/me');
+
+                    if (res.status !== 200) {
+                        localStorage.removeItem('token');
+                    }
+
+                    return this.$router.push('/');
+                } catch (err) {
+                    localStorage.removeItem('token');
+                    return this.$router.push('/login');
+                }
             }
         }
     }
