@@ -308,6 +308,35 @@
             cursor: pointer;
         }
     }
+
+    .statistic-link {
+        width: 40px;
+        height: 40px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        position: absolute;
+        z-index: 1000;
+        top: 20px;
+        right: 20px;
+
+        padding: 4px;
+
+        border-radius: 50%;
+
+        background-color: #fff;
+
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+
+        svg {
+            width: 100%;
+            height: auto;
+
+            color: $color-primary;
+        }
+    }
 }
 
 
